@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-mysql-microservice-deployment
+spec:
+  selector:
+    matchLabels:
+      app: docker-mysql-microservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: docker-mysql-microservice
+    spec:
+      containers:
+        - name: docker-mysql-microservice
+          image: rmazumde123/docker-mysql-microservice:1.0
+          ports:
+            - containerPort: 8085
+          imagePullPolicy: Never
+
+          
+
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: docker-mysql-microservice-svc
+spec:
+  selector:
+    app: docker-mysql-microservice
+  ports:
+    - protocol: "TCP"
+      port: 8085 # The port that the service is running on in the cluster
+      targetPort: 8085 # The port exposed by the service
+  type: ClusterIP # type of the service.
+
